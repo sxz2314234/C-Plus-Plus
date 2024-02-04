@@ -15,8 +15,8 @@ or the distance away from the start.
 So,to resolve it,we make all distance grid[i][j] be added 2 to represent the distance.
 Then grid[i][j]=1 represents the position blocked.
 */
-#include<iostream>
-#include"queue.cpp"
+#include <iostream>
+#include "queue.cpp"
 
 struct position
 {
@@ -25,16 +25,15 @@ struct position
     int col;
 };
 
-position start={3,2};
-position end={4,6};
+position start = {3, 2};
+position end = {4, 6};
 position offset[4];
-position* path;
+position *path;
 int path_Lenth;
 bool find_Path();
 void show_Path();
 
-int grid[9][9]={{0,0,0,0,0,0,0,0,0},{0,0,0,1,0,0,0,0,0},{0,0,0,1,1,0,0,0,0},{0,0,0,0,0,1,0,0,0},
-{0,0,0,0,1,1,0,0,0},{0,1,0,0,0,1,0,0,0},{0,1,1,1,0,0,0,0,0},{0,1,1,1,0,0,0,0,0}};
+int grid[9][9] = {{0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 1, 0, 0, 0, 0, 0}, {0, 0, 0, 1, 1, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 1, 0, 0, 0}, {0, 0, 0, 0, 1, 1, 0, 0, 0}, {0, 1, 0, 0, 0, 1, 0, 0, 0}, {0, 1, 1, 1, 0, 0, 0, 0, 0}, {0, 1, 1, 1, 0, 0, 0, 0, 0}};
 
 int main()
 {
@@ -44,73 +43,81 @@ int main()
 
 bool find_Path()
 {
-    if(start.row==end.row&&start.col==end.col)
+    if (start.row == end.row && start.col == end.col)
     {
-        path_Lenth=0;
+        path_Lenth = 0;
         return true;
     }
-    int option=4;
-    offset[0].row=0;offset[0].col=1;  //right
-    offset[1].row=1;offset[1].col=0;  //down
-    offset[2].row=0;offset[2].col=-1; //left
-    offset[3].row=-1;offset[3].col=0; //up
-    for(int i=0;i<9;i++)
+    int option = 4;
+    offset[0].row = 0;
+    offset[0].col = 1; // right
+    offset[1].row = 1;
+    offset[1].col = 0; // down
+    offset[2].row = 0;
+    offset[2].col = -1; // left
+    offset[3].row = -1;
+    offset[3].col = 0; // up
+    for (int i = 0; i < 9; i++)
     {
-        grid[0][i]=1;
-        grid[8][i]=1;
-        grid[i][0]=1;
-        grid[i][8]=1;
+        grid[0][i] = 1;
+        grid[8][i] = 1;
+        grid[i][0] = 1;
+        grid[i][8] = 1;
     }
 
-    position here=start;
-    grid[here.row][here.col]=2;
-    int numOfNbrs=4;
+    position here = start;
+    grid[here.row][here.col] = 2;
+    int numOfNbrs = 4;
 
     arrayQueue<position> queue;
     position nbr;
     do
     {
-        for(int i=0;i<numOfNbrs;++i)
+        for (int i = 0; i < numOfNbrs; ++i)
         {
-            nbr.row=here.row+offset[i].row;
-            nbr.col=here.col+offset[i].col;
+            nbr.row = here.row + offset[i].row;
+            nbr.col = here.col + offset[i].col;
 
-            if(grid[nbr.row][nbr.col]==0)
+            if (grid[nbr.row][nbr.col] == 0)
             {
-                grid[nbr.row][nbr.col]=grid[here.row][here.col]+1;
-                if(nbr.row==end.row&&nbr.col==end.col)break;
+                grid[nbr.row][nbr.col] = grid[here.row][here.col] + 1;
+                if (nbr.row == end.row && nbr.col == end.col)
+                    break;
                 queue.push(nbr);
             }
         }
-            if(nbr.row==end.row&&nbr.col==end.col)break;
+        if (nbr.row == end.row && nbr.col == end.col)
+            break;
 
-            if(queue.empty())return false;
+        if (queue.empty())
+            return false;
 
-            queue.pop(here);
-        
-    }while(true);
+        queue.pop(here);
 
-    path_Lenth=grid[end.row][end.col]-2;
-    path=new position[path_Lenth];
+    } while (true);
 
-    here=end;
-    for(int j=path_Lenth-1;j>=0;--j)
+    path_Lenth = grid[end.row][end.col] - 2;
+    path = new position[path_Lenth];
+
+    here = end;
+    for (int j = path_Lenth - 1; j >= 0; --j)
     {
-        path[j]=here;
-        for(int i=0;i<numOfNbrs;++i)
+        path[j] = here;
+        for (int i = 0; i < numOfNbrs; ++i)
         {
-            nbr.row=here.row+offset[i].row;
-            nbr.col=here.col+offset[i].col;
+            nbr.row = here.row + offset[i].row;
+            nbr.col = here.col + offset[i].col;
 
-            if(grid[nbr.row][nbr.col]==j+2)break;
+            if (grid[nbr.row][nbr.col] == j + 2)
+                break;
         }
-        here=nbr;
+        here = nbr;
     }
     return true;
 }
 void show_Path()
 {
-    for(int i=0;i<path_Lenth;++i)
-    std::cout<<"("<<path[i].row<<", "
-    <<path[i].col<<")"<<std::endl;
+    for (int i = 0; i < path_Lenth; ++i)
+        std::cout << "(" << path[i].row << ", "
+                  << path[i].col << ")" << std::endl;
 }
