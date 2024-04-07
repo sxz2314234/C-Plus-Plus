@@ -29,6 +29,7 @@ public:
     bool full() const { return top == stacksize - 1; }
     void push(T *);
     void pop(T **);
+    void pop() { top--; }
     T *gettop() const;
 };
 
@@ -55,7 +56,7 @@ Stack<T>::Stack(int initialcapacity)
 template <class T>
 Stack<T>::~Stack()
 {
-    delete stack;
+    delete[] stack;
 }
 
 template <class T>
@@ -75,6 +76,7 @@ void Stack<T>::pop(T **obj)
     if (empty())
     {
         cout << "The stack is empty" << endl;
+        *obj = nullptr;
         return;
     }
     *obj = stack[top--];

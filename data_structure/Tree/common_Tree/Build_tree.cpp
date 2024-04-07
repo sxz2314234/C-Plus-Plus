@@ -35,8 +35,8 @@ void output(const Treenode<T> *);
 template <class T>
 Treenode<T>* build_tree(Treenode<T> *root, const string &str)
 {
-    Stack<Treenode<T>> figure;
-    Stack<Treenode<T>> sign;
+    Stack<Treenode<T>> figure;  // number
+    Stack<Treenode<T>> sign;    // (),
     int i = 0;
     while (str[i] != '\0')
     {

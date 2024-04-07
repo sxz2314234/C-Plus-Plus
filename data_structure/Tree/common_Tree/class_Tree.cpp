@@ -13,6 +13,7 @@
 
 #include "Stack.cpp"
 #include <vector>
+#include <queue>
 
 using std::vector;
 
@@ -36,6 +37,7 @@ class tree
     void preorder(const TreeNode<T> *) const;
     void midorder(const TreeNode<T> *) const;
     void postorder(const TreeNode<T> *) const;
+
     int gethigh(const TreeNode<T> *, int) const;
     int getsize(const TreeNode<T> *) const;
 
@@ -52,6 +54,9 @@ public:
     // void level_visit()const;
     int size() const { return getsize(root); }
     int high() const { return gethigh(root, 0); }
+    void non_recrusive_postorder() const;
+    void non_recrusive_preorder() const;
+    void non_recrusive_midorder() const;
 };
 
 template <class T>
@@ -59,26 +64,26 @@ tree<T>::~tree()
 {
     if (root != nullptr)
     {
-        Stack<TreeNode<T>> zhan;
-        TreeNode<T> *pt = root;
-        TreeNode<T> *ppt = nullptr;
-        do
+        queue<TreeNode<T> *> duilie;
+        TreeNode<T> *head;
+
+        duilie.push(root);
+        while (!duilie.empty())
         {
-            if (pt->rchild != nullptr)
-                zhan.push(pt->rchild);
-            if (pt->lchild != nullptr)
+            head = duilie.front();
+            duilie.pop();
+
+            if (head->lchild != nullptr)
             {
-                ppt = pt;
-                pt = pt->lchild;
-                delete ppt;
+                duilie.push(head->lchild);
             }
-            if (pt->lchild == nullptr && pt->rchild == nullptr)
+            if (head->rchild != nullptr)
             {
-                delete pt;
-                if (!zhan.empty())
-                    zhan.pop(&pt);
+                duilie.push(head->rchild);
             }
-        } while (pt != nullptr || !zhan.empty());
+
+            delete head;
+        }
     }
 }
 
@@ -155,6 +160,8 @@ void tree<T>::creat(string &str)
         case ',':
             k = 1;
             break;
+
+        case ' ':
         default:
             switch (k)
             {
@@ -167,12 +174,13 @@ void tree<T>::creat(string &str)
                 pt->rchild = new TreeNode<T>(ch);
                 if (str[i + 1] == '(')
                     pt = pt->rchild;
+                zhan.pop(&pt);
                 break;
             }
             break;
         }
         i++;
-    } while (!zhan.empty());
+    } while (i<str.length()-1);
 }
 
 template <class T>
@@ -260,4 +268,57 @@ int height(const TreeNode<T> &pr)
 
 */
 
+template <class T>
+void tree<T>::non_recrusive_postorder() const
+{
+    TreeNode<T> *son = root;
+    TreeNode<T> *father = nullptr;
+    Stack<TreeNode<T>> zhan;
+
+    zhan.push(root);
+    while (!zhan.empty())
+    {
+        if (father == nullptr)
+        {
+            if (son->lchild != nullptr)
+            {
+                zhan.push(son);
+                son = son->lchild;
+            }
+            else if(son->rchild!=nullptr)
+            {
+                zhan.push(son);
+                son=son->rchild;
+            }
+            else
+            {
+                father=zhan.gettop();
+            }
+        }
+        else
+        {
+            if(father->lchild==son)
+            {
+                cout<<son->element<<" ";
+                son=father->rchild;
+                father=nullptr;
+            }
+            else if(father->rchild==son)
+            {
+                cout<<son->element<<" ";
+                son=father;
+                zhan.pop();
+                father=zhan.gettop();
+            }
+            else
+            {
+                cout<<son->element<<" ";
+                zhan.pop();
+            }
+        }
+    }
+    cout<<endl;
+}
+
 #endif
+

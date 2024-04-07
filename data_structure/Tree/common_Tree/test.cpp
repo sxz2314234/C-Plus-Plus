@@ -9,5 +9,5 @@ int main()
     cin >> str;
 
     tr.creat(str);
-    tr.mid_visit();
+    tr.non_recrusive_postorder();
 }
