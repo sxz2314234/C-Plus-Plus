@@ -40,12 +40,12 @@ std::thread my_thread([]
                       {do_something();do_something_else(); });
 
 // If we start the thread, we should decide when to terminate it
-class func
+class func1
 {
     int &i;
 
 public:
-    func(int &i_) : i(i_){};
+    func1(int &i_) : i(i_){};
     void operator()()
     {
         for (unsigned int j = 0; j < 10000; ++j)
@@ -58,7 +58,7 @@ public:
 void oops()
 {
     int some_local_state = 0;
-    func my_func(some_local_state);
+    func1 my_func(some_local_state);
     std::thread my_thread(my_func);
     my_thread.detach(); // 2.不等待线程结束
 } // 3.新线程可能还在运行
@@ -142,12 +142,12 @@ std::thread t(f, 3, "hello"); // 静态变量的指针传参没有问题
 // 但是传动态变量的指针可能会引发两个问题：
 // 1.函数很有可能在字面值转化成std::string对象之前崩溃
 // 2.std::thread的构造函数会复制提供的变量，就只复制了没有转换称期望类型的字符串字面值；
-void f(int i, std::string const &s);
+void func(int i, std::string const &s);
 void oops(int some_param)
 {
     char buffer[1024];
     sprintf(buffer, "%i", some_param);
-    std::thread t(f, 3, buffer);
+    std::thread t(func, 3, buffer);
     // 使用std::string(buffer)显示转换，避免悬垂指针
     t.detach();
 }

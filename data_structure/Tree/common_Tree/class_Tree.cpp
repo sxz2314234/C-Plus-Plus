@@ -144,6 +144,8 @@ void tree<T>::creat(string &str)
     char ch = str[i++];
     root->element = ch;
     TreeNode<T> *pt = root;
+
+    zhan.push(pt);
     do
     {
         /* code */
@@ -155,7 +157,8 @@ void tree<T>::creat(string &str)
             k = 0;
             break;
         case ')':
-            zhan.pop(&pt);
+            zhan.pop();
+            pt=zhan.gettop();
             break;
         case ',':
             k = 1;
@@ -174,13 +177,12 @@ void tree<T>::creat(string &str)
                 pt->rchild = new TreeNode<T>(ch);
                 if (str[i + 1] == '(')
                     pt = pt->rchild;
-                zhan.pop(&pt);
                 break;
             }
             break;
         }
         i++;
-    } while (i<str.length()-1);
+    } while (i < str.length() - 1);
 }
 
 template <class T>
@@ -285,40 +287,39 @@ void tree<T>::non_recrusive_postorder() const
                 zhan.push(son);
                 son = son->lchild;
             }
-            else if(son->rchild!=nullptr)
+            else if (son->rchild != nullptr)
             {
                 zhan.push(son);
-                son=son->rchild;
+                son = son->rchild;
             }
             else
             {
-                father=zhan.gettop();
+                father = zhan.gettop();
             }
         }
         else
         {
-            if(father->lchild==son)
+            if (father->lchild == son)
             {
-                cout<<son->element<<" ";
-                son=father->rchild;
-                father=nullptr;
+                cout << son->element << " ";
+                son = father->rchild;
+                father = nullptr;
             }
-            else if(father->rchild==son)
+            else if (father->rchild == son)
             {
-                cout<<son->element<<" ";
-                son=father;
+                cout << son->element << " ";
+                son = father;
                 zhan.pop();
-                father=zhan.gettop();
+                father = zhan.gettop();
             }
             else
             {
-                cout<<son->element<<" ";
+                cout << son->element << " ";
                 zhan.pop();
             }
         }
     }
-    cout<<endl;
+    cout << endl;
 }
 
 #endif
-
